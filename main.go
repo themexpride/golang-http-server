@@ -6,6 +6,18 @@ import (
   "net/http"
 )
 
+func emailHandler(w http.ResponseWriter, r *http.Request) {
+    if err := r.ParseForm(); err != nil {
+        fmt.Fprintf(w, "ParseForm() err: %v", err)
+        return
+    }
+    fmt.Println("POST request successful")
+
+    email := r.FormValue("email")
+    fmt.Fprintf(w, "Successfully signed up: %s \n", email)
+}
+
+
 func formHandler(w http.ResponseWriter, r *http.Request) {
     if err := r.ParseForm(); err != nil {
         fmt.Fprintf(w, "ParseForm() err: %v", err)
@@ -37,6 +49,7 @@ func main() {
     http.Handle("/", fileServer)
     http.HandleFunc("/form", formHandler)
     http.HandleFunc("/hello", helloHandler)
+    http.HandleFunc("/email", emailHandler)
   
     fmt.Println("Starting server at port 8080")
     if err := http.ListenAndServe(":8080", nil); err != nil {
