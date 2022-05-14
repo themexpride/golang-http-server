@@ -50,6 +50,8 @@ func main() {
     http.HandleFunc("/form", formHandler)
     http.HandleFunc("/hello", helloHandler)
     http.HandleFunc("/email", emailHandler)
+    http.Handle("/second-level", http.FileServer(http.Dir("./static/second-level")))
+    http.Handle("/third-level", http.FileServer(http.Dir("./static/third-level")))
   
     fmt.Println("Starting server at port 8080")
     if err := http.ListenAndServe(":8080", nil); err != nil {
