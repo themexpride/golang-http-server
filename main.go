@@ -6,6 +6,7 @@ import (
   "net/http"
 )
 
+
 func emailHandler(w http.ResponseWriter, r *http.Request) {
     if err := r.ParseForm(); err != nil {
         fmt.Fprintf(w, "ParseForm() err: %v", err)
@@ -31,6 +32,22 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
     fmt.Fprintf(w, "Address: %s \n", address)
 }
 
+func sl_handler(w http.ResponseWriter, r *http.Request) {
+    if err := r.ParseForm(); err != nil {
+        fmt.Fprintf(w, "ParseForm() err: %v", err)
+        return
+    }
+    http.ServeFile( w, r, "./static/second-level.html")
+}
+
+func th_handler(w http.ResponseWriter, r *http.Request) {
+    if err := r.ParseForm(); err != nil {
+        fmt.Fprintf(w, "ParseForm() err: %v", err)
+        return
+    }
+    http.ServeFile( w, r, "./static/third-level.html")
+}
+
 func helloHandler(w http.ResponseWriter, r *http.Request) {
     if r.URL.Path != "/hello" {
         http.Error(w, "404 not found", http.StatusNotFound)
@@ -50,8 +67,8 @@ func main() {
     http.HandleFunc("/form", formHandler)
     http.HandleFunc("/hello", helloHandler)
     http.HandleFunc("/email", emailHandler)
-    http.Handle("/second-level", http.FileServer(http.Dir("./static/second-level")))
-    http.Handle("/third-level", http.FileServer(http.Dir("./static/third-level")))
+    http.HandleFunc("/second-level", sl_handler)
+  http.HandleFunc("/third-level", th_handler)
   
     fmt.Println("Starting server at port 8080")
     if err := http.ListenAndServe(":8080", nil); err != nil {
